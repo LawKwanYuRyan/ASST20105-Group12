@@ -517,7 +517,187 @@ Data Btree::search(string str)
 		double nn = (clock() - start) / (double)CLOCKS_PER_SEC;
 		cout << "search costed " << nn << " sec." << endl;
 	return data;
+}
+
+int Btree::searchByType(Node* node, string type)
+{
+	clock_t start;
+	start = clock();
+	int cc = 0;
+	for (int i = 0; i <= node->keyTally; i++)
+	{
+		if (node->pointers[i] != NULL && node->leaf == false)
+			cc += searchByType(node->pointers[i], type);
+		for (int k = 0 ; k < (int)node->keys[i].genres->size();k++)
+		{
+			if (type == node->keys[i].genres[k])
+				cc++;
+		}
+	}
+	if (node->pointers[node->keyTally + 1] != NULL && node->leaf == false)
+		cc += searchByType(node->pointers[node->keyTally + 1], type);
 	
+	double nn = (clock() - start) / (double)CLOCKS_PER_SEC;
+	cout << "search costed " << nn << " sec." << endl;
+	return cc;
+}
+
+int Btree::searchByTypeM(Node * node, string type)
+{
+	clock_t start;
+	start = clock();
+	
+	int cc = 0;
+	for (int i = 0; i <= node->keyTally; i++)
+	{
+		if (node->pointers[i] != NULL && node->leaf == false)
+			cc += searchByTypeM(node->pointers[i], type);
+		if (type == node->keys[i].titleType)
+			cc++;
+	}
+	if (node->pointers[node->keyTally + 1] != NULL && node->leaf == false)
+		cc += searchByTypeM(node->pointers[node->keyTally + 1], type);
+	double nn = (clock() - start) / (double)CLOCKS_PER_SEC;
+	cout << "search costed " << nn << " sec." << endl;
+	return cc;
+}
+
+int Btree::searchByYear(Node* node,int year)
+{
+	clock_t start;
+	start = clock();
+	
+	int cc=0;
+	for (int i = 0; i <= node->keyTally; i++)
+	{
+		if (node->pointers[i] != NULL && node->leaf == false)
+			cc+=searchByYear(node->pointers[i], year);
+		if (year == node->keys[i].startYear)
+			cc++;
+	}
+	if (node->pointers[node->keyTally + 1] != NULL && node->leaf == false)
+		cc+=searchByYear(node->pointers[node->keyTally + 1],year);
+	double nn = (clock() - start) / (double)CLOCKS_PER_SEC;
+	cout << "search costed " << nn << " sec." << endl;
+	return cc;
+}
+
+void Btree::modify(string str)
+{
+	Data* data; int num = 0;
+	Data d;
+	data = &d;
+	Node* current = head;
+	//before current == leaf
+	clock_t start;
+	start = clock();
+	while ((current->leaf != true) && (data->tconst != str))
+	{
+		num = 0;
+		for (int i = 0; i <= current->keyTally; i++)
+		{
+			if (str > current->keys[i].tconst) {
+				num++;
+				//	cout << "after " << current->keys[i].tconst << endl;
+			}
+
+			else if (str == current->keys[i].tconst)
+			{
+				data = &current->keys[i];
+				break;
+			}
+			else
+				break;
+		}
+		current = current->pointers[num];
+	}
+	//current == leaf
+	for (int i = 0; i <= current->keyTally; i++)
+	{
+		if (str == current->keys[i].tconst)
+			data = &current->keys[i];
+	}
+	double nn = 0;
+	nn += (clock() - start) / (double)CLOCKS_PER_SEC;
+	//start = clock();
+	
+	if (data->tconst == "empty")
+	{
+		cout << "item not found";
+		
+	}
+	else
+	{
+		cout << "Actions: 1,name : 2,titleType : 3,year : 4,runtimeMinutes : 5,genres"<<endl;
+		cout << "Enter modify type : ";
+		int tem = 0;
+		cin >> tem;
+		switch (tem)
+		{
+		case 1:
+		{
+			cout << "Enter new name : ";
+			string stem;
+			cin >> stem;
+			start = clock();
+			data->primaryTitle = stem;
+			nn += (clock() - start) / (double)CLOCKS_PER_SEC;
+			break;
+		}
+		case 2:
+		{
+			cout << "Enter new titleType : ";
+			string stem;
+			cin >> stem;
+			start = clock();
+			data->titleType = stem;
+
+			break;
+		}
+		case 3:
+		{
+			cout << "Enter new year : ";
+			int stem;
+			cin >> stem;
+			start = clock();
+			data->startYear = stem;
+			break;
+		}
+		case 4:
+		{
+			cout << "Enter new runtimeMinutes : ";
+			int stem;
+			cin >> stem;
+			start = clock();
+			data->runtimeMinutes = stem;
+			break;
+		}
+		case 5:
+		{
+			cout << "Enter size of the new genres : ";
+			int st = 0;
+			cin >> st;
+			string stem;
+			for (int i = 0; 1 < st; i++) 
+			{
+				cout << "Enter  the new genres : ";
+				cin >> stem;
+				data->genres[i] = stem;
+				stem = "";
+			}
+			for (int i = st; 1 < 3; i++)
+			{
+				data->genres[i] = "";
+			}
+			start = clock();
+			break;
+		}
+		default:
+			break;
+		}
+	}
+	nn += (clock() - start) / (double)CLOCKS_PER_SEC;
+	cout << "Modify costed " << nn << " sec." << endl;
 }
 
 Btree::Btree()
@@ -529,7 +709,8 @@ Btree::Btree()
 
 void Btree::print(Node* node)
 {
-	
+	clock_t start;
+	start = clock();
 	for (int i = 0; i <= node->keyTally; i++)
 	{
 		if (node->pointers[i] != NULL && node->leaf==false)
@@ -538,5 +719,6 @@ void Btree::print(Node* node)
 	}
 	if (node->pointers[node->keyTally+1] != NULL && node->leaf == false)
 		print(node->pointers[node->keyTally+1]);
-	
+	double nn = (clock() - start) / (double)CLOCKS_PER_SEC;
+	cout << "search costed " << nn << " sec." << endl;
 }

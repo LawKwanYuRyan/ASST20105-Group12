@@ -58,5 +58,8 @@
     <Text Include="DataSet1_50000.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="DataSet_full.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

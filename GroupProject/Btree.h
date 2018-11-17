@@ -33,6 +33,10 @@ public:
 
 // task 3
 	Data search(string str);	//to do first
+	int searchByType(Node* node, string type);
+	int searchByTypeM(Node* node, string type);
+	int searchByYear(Node* node,int year);
+	void modify(string str);
 // task 4 Statistical functions
 	//provide a total number of movies produced in given year
 	int moviesInYear(/*year value*/ /*bool print movie or not*/);
