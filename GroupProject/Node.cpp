@@ -42,7 +42,7 @@ void Node::addByName(Data d)
 	string id = d.primaryTitle;
 	Data temp1, temp2;
 	int i = 0;
-	while (id > keys[i].primaryTitle)
+	while (id > (string)(keys[i].primaryTitle) && i <= keyTally)
 	{
 		i++;
 	}
