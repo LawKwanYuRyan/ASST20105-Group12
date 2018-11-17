@@ -28,7 +28,7 @@ public:
 	void insertionName(Data d);//almost
 	
 // task 2 
-	void deletionId(/*string idcode*/);	//to do first
+	void deletionId(string str);	//to do first
 	void deletionName(/*string name*/);
 
 // task 3

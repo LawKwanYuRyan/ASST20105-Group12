@@ -381,6 +381,105 @@ void Btree::insertionName(Data d)
 	}
 }
 
+void Btree::deletionId(string str)
+{
+	Node* current = head;
+	int num;
+	bool chk = false;
+	clock_t start;
+	start = clock();
+	//searching for the deleting  data before reaching leaf
+	while ((current->leaf != true)&&(chk==false))
+	{
+		num = 0;
+		for (int i = 0; i <= current->keyTally; i++)
+		{
+			if (str > current->keys[i].tconst) {
+				num++;
+				//	cout << "after " << current->keys[i].tconst << endl;
+			}
+
+			else if (str == current->keys[i].tconst)
+			{
+				chk = true;
+				num = i;
+				std::cout << current->keys[i].tconst << "data found!" << endl;//fine
+				break;
+			}
+			else
+				break;
+		}
+		if(chk == false)
+			current = current->pointers[num];
+	}
+	//arrived leaf , deleting data is at leaf
+	if (chk == false)
+	{
+		for (int i = 0; i <= current->keyTally; i++)
+		{
+			if (str == current->keys[i].tconst)
+			{
+				std::cout << "data found at leaf!" << endl; //fine
+				for (int j = i; j <= current->keyTally; j++)
+				{
+					current->keys[j] = current->keys[j + 1];
+				}
+				current->keyTally--;
+				break;
+			}
+		}
+	}
+	else
+	{
+		Node* pt=current;
+		Node* pn=current;
+		Data dt;
+		int c = num;
+		int n;
+		//replace from front
+		if (current->pointers[num]->keyTally > current->pointers[num + 1]->keyTally)
+		{
+			pt = current->pointers[num];
+			while (pt->pointers[num + 1] != NULL)
+			{
+				num = pt->keyTally;
+				
+				pn = pt;
+				pt = pt->pointers[num+1];
+	
+			}
+			dt = pt->keys[pt->keyTally];
+			num = pt->keyTally;
+		}
+		//from behind
+		else
+		{
+			pt = current->pointers[num+1];
+			while ( pt->pointers[0] != NULL)
+			{
+				pn = pt;
+				pt = pt->pointers[0];
+			}
+			dt = pt->keys[0];
+			num = 0;
+		}
+		current->keys[c] = dt;
+		//reched leaf
+		cout << pt->keys[c].tconst;
+		for (int j = c; j < pt->keyTally; j++)
+		{
+			
+			pt->keys[j] = pt->keys[j + 1];
+		}
+		cout << pt->keys[c].tconst<<endl;
+		pt->keyTally--;
+		if (pt->keyTally == -1)
+			pn->leaf = true;
+	}
+	double nn = (clock() - start) / (double)CLOCKS_PER_SEC;
+	std::cout << "delete costed " << nn << " sec." << endl;
+}
+
 Data Btree::search(string str)
 {
 	Data data; int num=0;
