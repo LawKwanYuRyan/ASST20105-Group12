@@ -214,3 +214,30 @@ void Btree::print(Node* node)
 	}
 	cout << endl;
 }
+
+Data Btree::search(string tconst) {
+  Node* curr = head;
+  
+  while (!curr->leaf) {
+    bool found = false;
+    int i = 0;
+    while (!found && curr->pointers[i]) {
+      if (tconst < curr->keys[i].tconst) {
+        curr = curr->pointers[i];
+        found = true;
+      }
+      ++i;
+    }
+    if (!found)
+      curr = curr->pointers[i];
+  }
+
+  Data data;
+  for (int i = 0; i < 6; ++i) {
+    if (curr->keys[i].tconst == tconst) {
+      data = curr->keys[i];
+      break;
+    }
+  }
+  return data;
+}
