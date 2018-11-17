@@ -4,6 +4,8 @@
 
 #include "stdafx.h"
 #include <iostream>
+#include <cstdio>
+#include <ctime>
 using namespace std;
 
 #include "Node.h"
@@ -30,7 +32,7 @@ public:
 	void deletionName(/*string name*/);
 
 // task 3
-	void search(/*different types of datas should be able to be used for searching*/);	//to do first
+	Data search(string str);	//to do first
 // task 4 Statistical functions
 	//provide a total number of movies produced in given year
 	int moviesInYear(/*year value*/ /*bool print movie or not*/);

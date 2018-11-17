@@ -170,21 +170,24 @@ void Btree::insertionId(Data d)
 					//	cout << "2. " << arr[i]->keyTally << endl;
 						head->pointers[0] = arr[i];
 					//	cout << "3. " << arr[i]->keyTally << endl;
+						/*
 						cout << "Left = ";
 						for (int k = 0; k <= arr[i]->keyTally; k++)
 						{
 							cout << i + 1 << " : " << arr[i]->keys[k].tconst << " . ";
 						}
 						cout << endl;
+						*/
 					//	cout << "Error new top 05" << endl;
 						head->pointers[1] = temp[tempc - 1];
+						/*
 						cout << "Right = ";
 						for (int k = 0; k <= head->pointers[1]->keyTally; k++)
 						{
 							cout << i + 1 << " : " << head->pointers[1]->keys[k].tconst << " . ";
 						}						
 						cout << endl;
-
+						*/
 					//	cout << "Error new top 06" << endl;
 						for (int k = 2; k < 7; k++)
 						{
@@ -376,6 +379,46 @@ void Btree::insertionName(Data d)
 			}
 		}
 	}
+}
+
+Data Btree::search(string str)
+{
+	Data data; int num=0;
+	Node* current = head;
+	data.tconst = "empty";
+	//before current == leaf
+	clock_t start; 
+	start = clock();
+	while ((current->leaf != true) && (data.tconst!=str))
+	{
+		num = 0;
+		for (int i = 0 ; i <= current->keyTally; i++)
+		{
+			if (str > current->keys[i].tconst) {
+				num++;
+			//	cout << "after " << current->keys[i].tconst << endl;
+			}
+				
+			else if (str == current->keys[i].tconst)
+			{
+				data = current->keys[i];
+				break;
+			}
+			else
+				break;
+		}
+		current = current->pointers[num];
+	}
+	//current == leaf
+		for (int i = 0; i <= current->keyTally; i++)
+		{
+			if (str == current->keys[i].tconst)
+				data = current->keys[i];
+		}
+		double nn = (clock() - start) / (double)CLOCKS_PER_SEC;
+		cout << "search costed " << nn << " sec." << endl;
+	return data;
+	
 }
 
 Btree::Btree()
